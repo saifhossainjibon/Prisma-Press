@@ -1,8 +1,5 @@
-import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { prisma } from "../../lib/prisma";
-import config from "../../config";
 import { userService } from "./user.service";
 
 const registerUser = async (req: Request, res: Response) => {
