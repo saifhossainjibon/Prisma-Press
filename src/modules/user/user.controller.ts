@@ -3,10 +3,9 @@ import httpStatus from "http-status";
 import { userService } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendRespose";
-import jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from "../../config";
 import { jwtUtils } from "../../utils/jwt";
-
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +15,7 @@ const registerUser = catchAsync(
       success: true,
       statusCode: httpStatus.CREATED,
       message: "User Registered Successfully !!!",
-      data: {user},
+      data: { user },
     });
   },
 );
@@ -30,14 +29,32 @@ const getMyProfile = catchAsync(
     // if(typeof verifiedToken === 'string'){
     //   throw new Error(verifiedToken)
     // }
-    const profile = await userService.getMyProfileFromDb(req.user?.id as string)
+    const profile = await userService.getMyProfileFromDb(
+      req.user?.id as string,
+    );
 
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: "User Profile Fetched Successfully !!!",
-      data: {profile},
+      data: { profile },
     });
   },
 );
-export const userController = { registerUser, getMyProfile };
+const updateMyProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.id as string;
+    const payload = req.body;
+    const updatedProfile = await userService.updateMyProfileInDb(
+      userId,
+      payload,
+    );
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User Profile updated Successfully !!!",
+      data: { updatedProfile },
+    });
+  },
+);
+export const userController = { registerUser, getMyProfile, updateMyProfile };
